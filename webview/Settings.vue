@@ -3,7 +3,7 @@
         <div class="settings-window">
             <!-- header -->
             <div class="settings-header">
-                <h2>Настройки</h2>
+                <h2>Settings</h2>
                 <button @click="close" class="close-button">✕</button>
             </div>
             
@@ -23,7 +23,7 @@
                 </nav>
                 
                 <!-- category settings - depends on the active category -  -->
-                <div class="settings-content">
+                <div v-if="settings.chat" class="settings-content">
                     <!-- preview - chat settings -->
                     <div v-if="activeCategory === 'chat'" class="settings-section">
                         <h3>Chat Module Settings</h3>
@@ -95,20 +95,9 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useEvents } from '../../../../webview/composables/useEvents';
-const events = useEvents();
+import { defaultChatSettings, chatSettings, ChatSettings } from '@Plugins/chat/client/settings.js'
 
-// INSERT YOUR OWN MODULES HERE
-// pluginName: null - fills on init/defaults 
-import { ChatSettings } from '@Plugins/chat/client/settings.js'
-const categories: SettingsCategory[] = [
-    { id: 'chat', name: 'Chat', icon: 'fa-comment' }
-];
-const settings = ref<Settings>({
-    chat: null
-});
-const defaults = ref<Settings>({
-    chat: null
-});
+const events = useEvents();
 
 interface SettingsCategory {
     id: string;
@@ -121,8 +110,19 @@ interface Settings {
     [key: string]: any;
 }
 
+const categories: SettingsCategory[] = [
+    { id: 'chat', name: 'Чат', icon: 'fa-comment' }
+];
 
 const activeCategory = ref('chat');
+const settings = ref<Settings>({
+    chat: null
+});
+
+const defaults = ref<Settings>({
+    chat: null
+});
+
 function updateSetting(module: string, key: string, value: any) {
     events.emitClient('webview:settings:set', module, key, value);
 }

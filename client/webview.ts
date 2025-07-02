@@ -9,8 +9,8 @@ class SettingsViewManager {
     // do init and defaults for each webview setting
     // webview is isolated in relation to the altv runtime
     initSettings() {
-        this.webview.emit("webview:settings:init", chatSettings.getSettings());
         this.webview.emit("webview:settings:defaults", defaultChatSettings);
+        this.webview.emit("webview:settings:init", chatSettings.getSettings());
     }
 
     // pass webview events onto client
@@ -36,7 +36,7 @@ class SettingsViewManager {
         if (this.isOpen) return;
         this.webview = useWebview();
 
-        this.webview.show('Settings', 'page');
+        this.webview.show('Settings', 'overlay'); // overlay to see chat in the example
         alt.showCursor(true);
         alt.toggleGameControls(false);
 
@@ -44,7 +44,7 @@ class SettingsViewManager {
         this.isOpen = true;
 
         this.initWebviewListeners();
-        
+        this.initSettings();
 
         this.sendCurrentSettings();
     }
